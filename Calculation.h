@@ -1,4 +1,6 @@
 #pragma once
+#include "Matrix4x4.h"
+#include "Vector3.h"
 
 class Calculation {
 public:
@@ -43,7 +45,14 @@ public:
 	    MakeAfineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 	// ベクトル変換
 	static Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
-};
+
+	// 1. 透視投影行列
+	static Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRation, float nearClip, float farClip);
+	// 2. 正射影行列
+	static Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
+	// 3. ビューポート変換行列
+	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+};	
 
 static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
