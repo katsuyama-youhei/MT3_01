@@ -49,3 +49,5 @@ static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 
 void MatrixScreenPrintf(int x, int y, Matrix4x4 matrix, const char* label);
+
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
