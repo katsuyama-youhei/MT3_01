@@ -1,4 +1,5 @@
 #include <Novice.h>
+#include"Calculation.h"
 
 const char kWindowTitle[] = "LD2A_カツヤマヨウヘイ_確認課題";
 
