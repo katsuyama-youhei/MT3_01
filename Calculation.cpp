@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 #include "Calculation.h"
 #include <cmath>
+#include<Novice.h>
 
 // 加算
 Matrix4x4 Calculation::Add(const Matrix4x4& m1, const Matrix4x4& m2) {
@@ -432,10 +433,14 @@ Vector3 Calculation::TransformNormal(const Vector3& v, const Matrix4x4& m) {
 }
 
 // クラス外
-// Vector3 operator+=(const Vector3& v1, const Vector3& v2){
-//	Vector3 result;
-//	result.x = v1.x + v2.x;
-//	result.y = v1.y + v2.y;
-//	result.z = v1.z + v2.z;
-//	return result;
-//};
+void MatrixScreenPrintf(int x, int y, Matrix4x4 matrix, const char* label) {
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 0; row < 4; ++row) {
+		for (int colum = 0; colum < 4; ++colum) {
+			Novice::ScreenPrintf(
+				x + colum * kColumnWidth, 20 + y + row * kRowHeight, "%6.02f",
+				matrix.m[row][colum]
+			);
+		}
+	}
+}

@@ -45,4 +45,7 @@ public:
 	static Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 };
 
-// Vector3 operator+(const Vector3& v1, const Vector3& v2);
+static const int kRowHeight = 20;
+static const int kColumnWidth = 60;
+
+void MatrixScreenPrintf(int x, int y, Matrix4x4 matrix, const char* label);
