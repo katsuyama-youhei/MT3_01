@@ -30,7 +30,8 @@ public:
 	// 正規化
 	static Vector3 Normlize(const Vector3& v);
 
-	
+	// クロス積
+	static Vector3 Cross(const Vector3& v1, const Vector3& v2);
 };	
 
 static const int kRowHeight = 20;

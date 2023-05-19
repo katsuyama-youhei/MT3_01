@@ -1,9 +1,7 @@
 #include "Rendering.h"
-#include"Vector3.h"
-#define _USE_MATH_DEFINES
 #include "Calculation.h"
 #include <cmath>
-#include"Matrix4x4.h"
+#include"assert.h"
 
 // 回転行列
 Matrix4x4 Rendering::MakeRotateXMatrix(float radian) {
@@ -152,14 +150,23 @@ Matrix4x4 Rendering::MakeAfineMatrix(
 
 Vector3 Rendering::TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
-		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
-		v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1],
-		v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] };
+		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0]+1.0f * m.m[3][0],
+		v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1]+1.0f*m.m[3][1],
+		v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]+1.0f*m.m[3][2]
+	};
+
+	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + 1.0f * m.m[3][3];
+	assert(w != 0.0f);
+	
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
+	
 	return result;
 }
 
 float cotangent(float a, float b) {
-	return (a / tan(b));
+	return (a / std::tan(b));
 }
 
 // 1. 透視投影行列

@@ -1,6 +1,10 @@
 #pragma once
+#include "Matrix4x4.h"
+#include "Vector3.h"
+
 class Rendering
 {
+public:
 	// 回転行列
 	static Matrix4x4 MakeRotateXMatrix(float radian);
 	static Matrix4x4 MakeRotateYMatrix(float radian);
@@ -23,5 +27,6 @@ class Rendering
 	static Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip);
 	// 3. ビューポート変換行列
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+
 };
 
