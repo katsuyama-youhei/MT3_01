@@ -41,6 +41,9 @@
     <ClCompile Include="Rendering.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Draw3D.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -113,5 +116,6 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.h" />
     <ClInclude Include="Calculation.h" />
     <ClInclude Include="Rendering.h" />
+    <ClInclude Include="Draw3D.h" />
   </ItemGroup>
 </Project>
