@@ -1,7 +1,6 @@
 #include <Novice.h>
 #include"Calculation.h"
 #include"Rendering.h"
-#include <numbers>
 
 const char kWindowTitle[] = "LD2A_カツヤマヨウヘイ_確認課題";
 
@@ -82,7 +81,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			screenVertices[i] = Rendering::TransformNormal(ndcVertex, viewportMatrix);
 		}
 
-		Vector3 triangleCross = Calculation::Cross(Calculation::Subtract(screenVertices[1], screenVertices[0]), Calculation::Subtract(screenVertices[2], screenVertices[1]));
 
 		///
 		/// ↑更新処理ここまで
@@ -93,14 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		VectorScreenPrintf(0, 0, cross, "Cross");
-		if (Calculation::Dot(cameraPosition, triangleCross) <= 0.0f) {
-			Novice::DrawTriangle(
-				int(screenVertices[0].x), int(screenVertices[0].y),
-				int(screenVertices[1].x), int(screenVertices[1].y),
-				int(screenVertices[2].x), int(screenVertices[2].y),
-				RED, kFillModeSolid
-			);
-		}
+		
 	
 
 		///
