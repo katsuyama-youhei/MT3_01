@@ -2,7 +2,6 @@
 #include <assert.h>
 #include"Vector3.h"
 #include"Matrix4x4.h"
-#include"Rendering.h"
 #include"Calculation.h"
 #include "Draw3D.h"
 #include<cmath>
@@ -25,8 +24,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVertices[1] = { xIndex * kGridEvery - kGridHalfwidth,0.0f, -kGridHalfwidth };
 		//スクリーンへ変換
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertex = Rendering::TransformNormal(worldVertices[i], viewProjectionMatrix);
-			screenVertices[i] = Rendering::TransformNormal(ndcVertex, viewportMatrix);
+			ndcVertex = TransformNormal(worldVertices[i], viewProjectionMatrix);
+			screenVertices[i] = TransformNormal(ndcVertex, viewportMatrix);
 		}
 
 		if (xIndex * kGridEvery - kGridHalfwidth == 0.0f) {
@@ -38,7 +37,7 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		}
 		else {
 			Novice::DrawLine(
-				int(screenVertices[0].x), int(screenVertices[0].y), 
+				int(screenVertices[0].x), int(screenVertices[0].y),
 				int(screenVertices[1].x), int(screenVertices[1].y),
 				0xAAAAAAFF
 			);
@@ -53,8 +52,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVertices[1] = { -kGridHalfwidth,0.0f, zIndex * kGridEvery - kGridHalfwidth };
 		//スクリーンへ変換
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertex = Rendering::TransformNormal(worldVertices[i], viewProjectionMatrix);
-			screenVertices[i] = Rendering::TransformNormal(ndcVertex, viewportMatrix);
+			ndcVertex = TransformNormal(worldVertices[i], viewProjectionMatrix);
+			screenVertices[i] = TransformNormal(ndcVertex, viewportMatrix);
 		}
 
 		if (zIndex * kGridEvery - kGridHalfwidth == 0.0f) {
@@ -89,19 +88,19 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			//world座標系でのa,b,cを求める
 			Vector3 a, b, c;
 			a = { sphere.radius * std::cosf(lat) * std::cosf(lon), sphere.radius * std::sinf(lat), sphere.radius * std::cosf(lat) * std::sinf(lon) };
-			a = Calculation::Add(a, sphere.center);
+			a = Add(a, sphere.center);
 			b = { sphere.radius * std::cosf(lat + kLatEvery) * std::cosf(lon), sphere.radius * std::sinf(lat + kLatEvery), sphere.radius * std::cosf(lat + kLatEvery) * std::sinf(lon) };
-			b = Calculation::Add(b, sphere.center);
+			b = Add(b, sphere.center);
 			c = { sphere.radius * std::cosf(lat) * std::cosf(lon + kLonEvery), sphere.radius * std::sinf(lat), sphere.radius * std::cosf(lat) * std::sinf(lon + kLonEvery) };
-			c = Calculation::Add(c, sphere.center);
+			c = Add(c, sphere.center);
 
 			//a,b,cをスクリーン座標へ
-			a = Rendering::TransformNormal(a, viewProjectionMatrix);
-			a = Rendering::TransformNormal(a, viewportMatrix);
-			b = Rendering::TransformNormal(b, viewProjectionMatrix);
-			b = Rendering::TransformNormal(b, viewportMatrix);
-			c = Rendering::TransformNormal(c, viewProjectionMatrix);
-			c = Rendering::TransformNormal(c, viewportMatrix);
+			a = TransformNormal(a, viewProjectionMatrix);
+			a = TransformNormal(a, viewportMatrix);
+			b = TransformNormal(b, viewProjectionMatrix);
+			b = TransformNormal(b, viewportMatrix);
+			c = TransformNormal(c, viewProjectionMatrix);
+			c = TransformNormal(c, viewportMatrix);
 
 
 			//線を引く

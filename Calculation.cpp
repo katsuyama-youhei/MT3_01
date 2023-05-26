@@ -458,8 +458,6 @@ float cotangent(float a, float b) {
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRation, float nearClip, float farClip) {
 	Matrix4x4 result;
 
-
-
 	result.m[0][0] = cotangent((1 / aspectRation), (fovY / 2.0f));
 	result.m[0][1] = 0.0f;
 	result.m[0][2] = 0.0f;
