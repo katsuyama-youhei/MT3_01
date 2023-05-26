@@ -109,7 +109,6 @@
     <ClCompile Include="Calculation.cpp" />
     <ClCompile Include="Draw3D.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h" />
@@ -140,7 +139,6 @@
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
     <ClInclude Include="Calculation.h" />
     <ClInclude Include="Draw3D.h" />
-    <ClInclude Include="Rendering.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
