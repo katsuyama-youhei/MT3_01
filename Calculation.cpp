@@ -269,13 +269,23 @@ float Length(const Vector3& v) {
 };
 
 // 正規化
-Vector3 Normlize(const Vector3& v) {
+Vector3 Normalize(const Vector3& v) {
 	Vector3 resultNormlize;
 	float length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	resultNormlize.x = v.x / length;
 	resultNormlize.y = v.y / length;
 	resultNormlize.z = v.z / length;
 	return resultNormlize;
+};
+
+// 積
+Vector3 Multiply(const Vector3& v1, const Vector3& v2) {
+	Vector3 result{
+		(v1.x*v2.x)+(v1.y*v2.x)+(v1.z*v2.x),
+		(v1.x * v2.y) + (v1.y * v2.y) + (v1.z * v2.y),
+		(v1.x * v2.z) + (v1.y * v2.z) + (v1.z * v2.z)
+	};
+	return result;
 };
 
 // クロス積
@@ -433,7 +443,7 @@ Matrix4x4 MakeAfineMatrix(
 	return result;
 }
 
-Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
+Vector3 Transform(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + 1.0f * m.m[3][0],
 		v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + 1.0f * m.m[3][1],
@@ -533,7 +543,44 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	return result;
 };
 
-// クラス外
+// 正射影ベクトル
+Vector3 Project(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result = Multiply(Dot(v1, Normalize(v2)), Normalize(v2));
+	return result;
+};
+// 最近接点
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
+	
+	float t = Dot(Subtract(point, segment.origin), segment.diff) / std::powf(Length(segment.diff), 2.0f);
+	t = Clamp(t, 1.0f, 0.0f);
+	Vector3 result = Add(segment.origin,Multiply( t,segment.diff));
+	return result;
+};
+
+// 小さいほうを返す
+float Min(float num, float min) {
+	if (num > min) {
+		return min;
+	}
+	else {
+		return num;
+	}
+}
+// 大きいほうを返す
+float Max(float num, float max) {
+	if (num < max) {
+		return max;
+	}
+	else {
+		return num;
+	}
+}
+
+// min<=num<=max
+float Clamp(float num, float max, float min) {
+	return Min(Max(num, min), max);
+};
 // matrix4x4の表示
 void MatrixScreenPrintf(int x, int y, Matrix4x4 matrix, const char* label) {
 	Novice::ScreenPrintf(x, y, "%s", label);

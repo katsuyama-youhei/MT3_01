@@ -24,8 +24,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVertices[1] = { xIndex * kGridEvery - kGridHalfwidth,0.0f, -kGridHalfwidth };
 		//スクリーンへ変換
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertex = TransformNormal(worldVertices[i], viewProjectionMatrix);
-			screenVertices[i] = TransformNormal(ndcVertex, viewportMatrix);
+			ndcVertex = Transform(worldVertices[i], viewProjectionMatrix);
+			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
 		}
 
 		if (xIndex * kGridEvery - kGridHalfwidth == 0.0f) {
@@ -52,8 +52,8 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		worldVertices[1] = { -kGridHalfwidth,0.0f, zIndex * kGridEvery - kGridHalfwidth };
 		//スクリーンへ変換
 		for (uint32_t i = 0; i < 2; ++i) {
-			ndcVertex = TransformNormal(worldVertices[i], viewProjectionMatrix);
-			screenVertices[i] = TransformNormal(ndcVertex, viewportMatrix);
+			ndcVertex = Transform(worldVertices[i], viewProjectionMatrix);
+			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
 		}
 
 		if (zIndex * kGridEvery - kGridHalfwidth == 0.0f) {
@@ -95,12 +95,12 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			c = Add(c, sphere.center);
 
 			//a,b,cをスクリーン座標へ
-			a = TransformNormal(a, viewProjectionMatrix);
-			a = TransformNormal(a, viewportMatrix);
-			b = TransformNormal(b, viewProjectionMatrix);
-			b = TransformNormal(b, viewportMatrix);
-			c = TransformNormal(c, viewProjectionMatrix);
-			c = TransformNormal(c, viewportMatrix);
+			a = Transform(a, viewProjectionMatrix);
+			a = Transform(a, viewportMatrix);
+			b = Transform(b, viewProjectionMatrix);
+			b = Transform(b, viewportMatrix);
+			c = Transform(c, viewProjectionMatrix);
+			c = Transform(c, viewportMatrix);
 
 
 			//線を引く

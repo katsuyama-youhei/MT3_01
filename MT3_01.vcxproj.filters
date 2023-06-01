@@ -38,9 +38,6 @@
     <ClCompile Include="Calculation.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Draw3D.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
@@ -115,7 +112,6 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector4.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.h" />
     <ClInclude Include="Calculation.h" />
-    <ClInclude Include="Rendering.h" />
     <ClInclude Include="Draw3D.h" />
   </ItemGroup>
 </Project>
