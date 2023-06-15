@@ -25,10 +25,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 point{ -1.5f,0.6f,0.6f };
 
 	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-	Vector3 closestPoint = ClosestPoint(point, segment);
 
-	Sphere sphere1{ point,1.0f }; // 1mの球を描画
-	Sphere sphere2{ closestPoint,1.0f };
+	Sphere sphere{ point,1.0f }; // 1mの球を描画
+	
+	Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
 
 	// 球のカラー変更用
 	unsigned int color = 0xFFFFFFFF;
@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldMViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (isCollision(sphere1, sphere2)) {
+		if (IsCollision(sphere, plane)) {
 			color = 0xFF0000FF;
 		}
 		else {
@@ -71,17 +71,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
-		DrawSphere(sphere1, worldMViewProjectionMatrix, viewportMatrix, color);
-		DrawSphere(sphere2, worldMViewProjectionMatrix, viewportMatrix,0XFFFFFFFF);
-
+		DrawSphere(sphere, worldMViewProjectionMatrix, viewportMatrix, color);
+		DrawPlane(plane, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("sphere1Center", &sphere1.center.x, 0.01f);
-		ImGui::DragFloat("sphere1Radius", &sphere1.radius, 0.01f);
-		ImGui::DragFloat3("sphere2Center", &sphere2.center.x, 0.01f);
-		ImGui::DragFloat("sphere2Radius", &sphere2.radius, 0.01f);
+		ImGui::DragFloat3("sphere1Center", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("sphere1Radius", &sphere.radius, 0.01f);
+		ImGui::DragFloat3("plane.Normal", &plane.normal.x, 0.01f);
+		plane.normal = Normalize(plane.normal);
+		ImGui::DragFloat("plane.Distance", &plane.distance, 0.01f);
 		ImGui::End();
 
 		///
