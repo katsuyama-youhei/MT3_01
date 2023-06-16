@@ -164,7 +164,7 @@ bool IsCollision(const Sphere& s1, const Sphere& s2) {
 	return false;
 };
 
-// 球と平画との衝突判定
+// 球と平面との衝突判定
 bool IsCollision(const Sphere& sphere, const Plane& plane) {
 	float distance = std::fabsf(Dot(plane.normal, sphere.center) - plane.distance);
 	if (distance <= sphere.radius) {

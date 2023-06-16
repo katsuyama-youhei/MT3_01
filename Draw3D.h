@@ -19,7 +19,7 @@ bool IsCollision(const Sphere& sphere, const Plane& plane);
 
 // 球の描画 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
-// 平画の描画
+// 平面の描画
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
 
 // 10*10のグリッドの描画
