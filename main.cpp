@@ -25,8 +25,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 point{ -1.5f,0.6f,0.6f };
 
 	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-
-	Sphere sphere{ point,1.0f }; // 1mの球を描画
 	
 	Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
 
@@ -71,17 +69,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
-		DrawSphere(sphere, worldMViewProjectionMatrix, viewportMatrix, color);
+	
 		DrawPlane(plane, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
 
 		ImGui::Begin("Window");
+		
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("sphere1Center", &sphere.center.x, 0.01f);
-		ImGui::DragFloat("sphere1Radius", &sphere.radius, 0.01f);
+		
 		ImGui::DragFloat3("plane.Normal", &plane.normal.x, 0.01f);
 		plane.normal = Normalize(plane.normal);
 		ImGui::DragFloat("plane.Distance", &plane.distance, 0.01f);
+		
 		ImGui::End();
 
 		///
