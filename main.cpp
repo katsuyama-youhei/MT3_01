@@ -24,9 +24,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,1.0f} };
 	Vector3 point{ -1.5f,0.6f,0.6f };
 
-	Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-
-	Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
+	Triangle triangle{ { -1.0f, 0.0f, 0.0f ,
+						 0.0f, 1.0f, 0.0f ,
+						 1.0f, 0.0f, 0.0f } };
 
 	// 球のカラー変更用
 	unsigned int color = 0xFFFFFFFF;
@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Vector3 start = Transform(Transform(segment.origin, worldMViewProjectionMatrix), viewportMatrix);
 		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), worldMViewProjectionMatrix), viewportMatrix);
 
-		if (IsCollision(segment, plane)) {
+		if (IsCollision(segment, triangle)) {
 			color = 0xFF0000FF;
 		}
 		else {
@@ -77,19 +77,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			int(end.x), int(end.y),
 			color
 		);
-		DrawPlane(plane, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
+
+		DrawTriangle(triangle, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
 
 		ImGui::Begin("Window");
 
-		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
-		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
+		//ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		//ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 
 		ImGui::DragFloat3("SegmentOrigin", &segment.origin.x, 0.01f);
 		ImGui::DragFloat3("SegmentDiff", &segment.diff.x, 0.01f);
 
-		ImGui::DragFloat3("plane.Normal", &plane.normal.x, 0.01f);
-		plane.normal = Normalize(plane.normal);
-		ImGui::DragFloat("plane.Distance", &plane.distance, 0.01f);
+		ImGui::DragFloat3("triangle.vertices[0]", &triangle.vertices[0].x, 0.01f);
+		ImGui::DragFloat3("triangle.vertices[1]", &triangle.vertices[1].x, 0.01f);
+		ImGui::DragFloat3("triangle.vertices[2]", &triangle.vertices[2].x, 0.01f);
 
 		ImGui::End();
 

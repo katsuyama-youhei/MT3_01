@@ -175,10 +175,10 @@ bool IsCollision(const Sphere& sphere, const Plane& plane) {
 
 // 線と平面との衝突判定
 bool IsCollision(const Segment& line, const Plane& plane) {
-	
+
 	// 垂直判定を行うために、法線と線の内積を求める
 	float dot = Dot(plane.normal, line.diff);
-	
+
 	// 垂直=平行であるので、衝突しているはずがない
 	if (dot == 0.0f) {
 		return false;
@@ -187,11 +187,79 @@ bool IsCollision(const Segment& line, const Plane& plane) {
 	// tを求める
 	float t = (plane.distance - Dot(line.origin, plane.normal)) / dot;
 	// tの値と線の種類によって衝突しているかを判断する
-	if (t < 0||t>1.0f) {
+	if (t < 0 || t>1.0f) {
 		return false;
 	}
 	return true;
 
+};
+
+// 線と三角形との衝突判定
+bool IsCollision(const Segment& line, const Triangle& triangle) {
+
+	// 角辺を結んだベクトル
+	Vector3 v01 = Subtract(triangle.vertices[1], triangle.vertices[0]);
+	Vector3 v12 = Subtract(triangle.vertices[2], triangle.vertices[1]);
+	Vector3 v20 = Subtract(triangle.vertices[0], triangle.vertices[2]);
+
+	//　平面を求める
+	Plane plane = { Normalize(Cross(v01, v12)),  0.0f };
+	plane.distance = plane.normal.x * v20.x + plane.normal.y * v20.y + plane.normal.z * v20.z;
+
+	//平面との衝突確認
+	// 垂直判定を行うために、法線と線の内積を求める
+	float dot = Dot(plane.normal, line.diff);
+
+	// 垂直=平行であるので、衝突しているはずがない
+	if (dot == 0.0f) {
+		return false;
+	}
+
+	//tを求める
+	float t = (plane.distance - Dot(line.origin, plane.normal)) / dot;
+
+	if (t < 0 || t > 1.0f) {
+		return false;
+	}
+	
+	// 衝突点pを求める
+	Vector3 p = Add(line.origin, Multiply(t, line.diff));
+
+	// 衝突点pと角頂点を結んだベクトル
+	Vector3 v1p = Subtract(p, triangle.vertices[1]);
+	Vector3 v2p = Subtract(p, triangle.vertices[2]);
+	Vector3 v0p = Subtract(p, triangle.vertices[0]);
+
+	// 各辺を結んだベクトルと、頂点と衝突点pを結んだベクトルのクロス積をとる
+	Vector3 cross01 = Cross(v01, v1p);
+	Vector3 cross12 = Cross(v12, v2p);
+	Vector3 cross20 = Cross(v20, v0p);
+
+	// 全小三角形のクロス積と法線が同じ方向を向いていたら衝突
+	// 0は内側と判断
+	if (Dot(cross01, plane.normal) >= 0.0f &&
+		Dot(cross12, plane.normal) >= 0.0f &&
+		Dot(cross20, plane.normal) >= 0.0f) {
+		return true;
+	}
+
+	return false;
+};
+
+// 三角形の描画
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
+	Triangle triangle_{
+		Transform(Transform(triangle.vertices[0], viewProjectionMatrix), viewportMatrix),
+		Transform(Transform(triangle.vertices[1], viewProjectionMatrix), viewportMatrix),
+		Transform(Transform(triangle.vertices[2], viewProjectionMatrix), viewportMatrix)
+	};
+
+	Novice::DrawTriangle(
+		int(triangle_.vertices[0].x), int(triangle_.vertices[0].y),
+		int(triangle_.vertices[1].x), int(triangle_.vertices[1].y),
+		int(triangle_.vertices[2].x), int(triangle_.vertices[2].y),
+		color,kFillModeWireFrame
+	);
 };
 
 Vector3 Perpendicular(const Vector3& vector) {
