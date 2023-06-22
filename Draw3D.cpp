@@ -197,7 +197,7 @@ bool IsCollision(const Segment& line, const Plane& plane) {
 // 線と三角形との衝突判定
 bool IsCollision(const Segment& line, const Triangle& triangle) {
 
-	// 角辺を結んだベクトル
+	// 各辺を結んだベクトル
 	Vector3 v01 = Subtract(triangle.vertices[1], triangle.vertices[0]);
 	Vector3 v12 = Subtract(triangle.vertices[2], triangle.vertices[1]);
 	Vector3 v20 = Subtract(triangle.vertices[0], triangle.vertices[2]);
