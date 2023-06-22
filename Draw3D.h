@@ -17,6 +17,9 @@ bool IsCollision(const Sphere& s1, const Sphere& s2);
 // 球と平画との衝突判定
 bool IsCollision(const Sphere& sphere, const Plane& plane);
 
+// 線と平面との衝突判定
+bool IsCollision(const Segment& line, const Plane& plane);
+
 // 球の描画 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
 // 平面の描画
