@@ -88,4 +88,9 @@ void MatrixScreenPrintf(int x, int y, Matrix4x4 matrix, const char* label);
 
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
+// 小さいほうを返す
+float Min(float num, float min);
+// 大きいほうを返す
+float Max(float num, float max);
+
 float Clamp(float num, float hight, float low);

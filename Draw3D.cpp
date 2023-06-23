@@ -221,7 +221,7 @@ bool IsCollision(const Segment& line, const Triangle& triangle) {
 	if (t < 0 || t > 1.0f) {
 		return false;
 	}
-	
+
 	// 衝突点pを求める
 	Vector3 p = Add(line.origin, Multiply(t, line.diff));
 
@@ -246,6 +246,16 @@ bool IsCollision(const Segment& line, const Triangle& triangle) {
 	return false;
 };
 
+// AABB同士の衝突判定
+bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
+		return true;
+	}
+	return false;
+};
+
 // 三角形の描画
 void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
 	Triangle triangle_{
@@ -258,8 +268,51 @@ void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 		int(triangle_.vertices[0].x), int(triangle_.vertices[0].y),
 		int(triangle_.vertices[1].x), int(triangle_.vertices[1].y),
 		int(triangle_.vertices[2].x), int(triangle_.vertices[2].y),
-		color,kFillModeWireFrame
+		color, kFillModeWireFrame
 	);
+};
+
+// AABBの描画(矩形の立体)
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
+
+	// min/maxで8頂点を求める
+	Vector3 frontLeftBottom = aabb.min;
+	Vector3 frontLeftTop = { aabb.min.x,aabb.max.y,aabb.min.z };
+	Vector3 frontRightTop = { aabb.max.x,aabb.max.y,aabb.min.z };
+	Vector3 frontRightBottom = { aabb.max.x,aabb.min.y,aabb.min.z };
+
+	Vector3 backRightTop = aabb.max;
+	Vector3 backLeftTop = { aabb.min.x,aabb.max.y,aabb.max.z };
+	Vector3 backLeftBottom = { aabb.min.x, aabb.min.y, aabb.max.z };
+	Vector3 backRightBottom = { aabb.max.x,aabb.min.y,aabb.max.z };
+
+	frontLeftBottom = Transform(Transform(frontLeftBottom, viewProjectionMatrix), viewportMatrix);
+	frontLeftTop = Transform(Transform(frontLeftTop, viewProjectionMatrix), viewportMatrix);
+	frontRightTop = Transform(Transform(frontRightTop, viewProjectionMatrix), viewportMatrix);
+	frontRightBottom = Transform(Transform(frontRightBottom, viewProjectionMatrix), viewportMatrix);
+
+	backRightTop = Transform(Transform(backRightTop, viewProjectionMatrix), viewportMatrix);
+	backLeftTop = Transform(Transform(backLeftTop, viewProjectionMatrix), viewportMatrix);
+	backLeftBottom = Transform(Transform(backLeftBottom, viewProjectionMatrix), viewportMatrix);
+	backRightBottom = Transform(Transform(backRightBottom, viewProjectionMatrix), viewportMatrix);
+
+	// 8頂点を結んで線を引く
+	Novice::DrawLine(int(frontLeftBottom.x), int(frontLeftBottom.y), int(frontLeftTop.x), int(frontLeftTop.y), color);
+	Novice::DrawLine(int(frontLeftBottom.x), int(frontLeftBottom.y), int(frontRightBottom.x), int(frontRightBottom.y), color);
+	Novice::DrawLine(int(frontLeftBottom.x), int(frontLeftBottom.y), int(backLeftBottom.x), int(backLeftBottom.y), color);
+
+	Novice::DrawLine(int(backLeftTop.x), int(backLeftTop.y), int(backLeftBottom.x), int(backLeftBottom.y), color);
+	Novice::DrawLine(int(backLeftTop.x), int(backLeftTop.y), int(backRightTop.x), int(backRightTop.y), color);
+	Novice::DrawLine(int(backLeftTop.x), int(backLeftTop.y), int(frontLeftTop.x), int(frontLeftTop.y), color);
+
+	Novice::DrawLine(int(frontRightTop.x), int(frontRightTop.y), int(frontLeftTop.x), int(frontLeftTop.y), color);
+	Novice::DrawLine(int(frontRightTop.x), int(frontRightTop.y), int(frontRightBottom.x), int(frontRightBottom.y), color);
+	Novice::DrawLine(int(frontRightTop.x), int(frontRightTop.y), int(backRightTop.x), int(backRightTop.y), color);
+
+	Novice::DrawLine(int(backRightBottom.x), int(backRightBottom.y), int(backRightTop.x), int(backRightTop.y), color);
+	Novice::DrawLine(int(backRightBottom.x), int(backRightBottom.y), int(backLeftBottom.x), int(backLeftBottom.y), color);
+	Novice::DrawLine(int(backRightBottom.x), int(backRightBottom.y), int(frontRightBottom.x), int(frontRightBottom.y), color);
+
 };
 
 Vector3 Perpendicular(const Vector3& vector) {
@@ -268,3 +321,14 @@ Vector3 Perpendicular(const Vector3& vector) {
 	}
 	return { 0.0f, -vector.z, vector.y };
 }
+
+void SwapLimit(AABB& aabb) {
+	aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+	aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+
+	aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+	aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+
+	aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
+	aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+};

@@ -2,6 +2,7 @@
 #include"Calculation.h"
 #include"Draw3D.h"
 #include <imgui.h>
+#include <cmath>
 
 const char kWindowTitle[] = "LD2A_カツヤマヨウヘイ_確認課題";
 
@@ -21,12 +22,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate = { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
 
-	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,1.0f} };
-	Vector3 point{ -1.5f,0.6f,0.6f };
+	AABB aabb1{
+		.min{-0.5f,-0.5f,-0.5f},
+		.max{0.0f,0.0f,0.0f},
+	};
 
-	Triangle triangle{ { -1.0f, 0.0f, 0.0f ,
-						 0.0f, 1.0f, 0.0f ,
-						 1.0f, 0.0f, 0.0f } };
+	AABB aabb2{
+		.min{0.2f,0.2f,0.2f},
+		.max{1.0f,1.0f,1.0f},
+	};
 
 	// 球のカラー変更用
 	unsigned int color = 0xFFFFFFFF;
@@ -52,16 +56,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldMViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		Vector3 start = Transform(Transform(segment.origin, worldMViewProjectionMatrix), viewportMatrix);
-		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), worldMViewProjectionMatrix), viewportMatrix);
-
-		if (IsCollision(segment, triangle)) {
+		if (IsCollision(aabb1, aabb2)) {
 			color = 0xFF0000FF;
 		}
 		else {
 			color = 0xFFFFFFFF;
 		}
 
+		// minとmaxが入れ替わらないように
+		SwapLimit(aabb1);
+		SwapLimit(aabb2);
 
 		///
 		/// ↑更新処理ここまで
@@ -72,25 +76,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
-		Novice::DrawLine(
-			int(start.x), int(start.y),
-			int(end.x), int(end.y),
-			color
-		);
 
-		DrawTriangle(triangle, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
+		DrawAABB(aabb1, worldMViewProjectionMatrix, viewportMatrix, color);
+		DrawAABB(aabb2, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
 
 		ImGui::Begin("Window");
 
-		//ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
-		//ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.01f);
+		ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.01f);
 
-		ImGui::DragFloat3("SegmentOrigin", &segment.origin.x, 0.01f);
-		ImGui::DragFloat3("SegmentDiff", &segment.diff.x, 0.01f);
-
-		ImGui::DragFloat3("triangle.vertices[0]", &triangle.vertices[0].x, 0.01f);
-		ImGui::DragFloat3("triangle.vertices[1]", &triangle.vertices[1].x, 0.01f);
-		ImGui::DragFloat3("triangle.vertices[2]", &triangle.vertices[2].x, 0.01f);
+		ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.01f);
+		ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.01f);
 
 		ImGui::End();
 
