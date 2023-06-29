@@ -38,6 +38,9 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 // AABBと球との衝突判定
 bool IsCollision(const AABB& aabb, const Sphere& sphere);
 
+// AABBと線の衝突判定
+bool IsCollision(const AABB& aabb, const Segment& line);
+
 // 球の描画 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
 // 平面の描画

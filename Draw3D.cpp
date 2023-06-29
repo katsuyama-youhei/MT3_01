@@ -274,6 +274,47 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere) {
 	return false;
 };
 
+// AABBと線の衝突判定
+bool IsCollision(const AABB& aabb, const Segment& line) {
+	Vector3 tMin = {
+		(aabb.min.x - line.origin.x) / line.diff.x,
+		(aabb.min.y - line.origin.y) / line.diff.y,
+		(aabb.min.z - line.origin.z) / line.diff.z
+	};
+
+	Vector3 tMax = {
+		(aabb.max.x - line.origin.x) / line.diff.x,
+		(aabb.max.y - line.origin.y) / line.diff.y,
+		(aabb.max.z - line.origin.z) / line.diff.z
+	};
+
+	Vector3 tNear = {
+		(std::min)(tMin.x, tMax.x) ,
+		(std::min)(tMin.y, tMax.y) ,
+		(std::min)(tMin.z, tMax.z)
+	};
+
+	Vector3 tFar = {
+	(std::max)(tMin.x, tMax.x) ,
+	(std::max)(tMin.y, tMax.y) ,
+	(std::max)(tMin.z, tMax.z) 
+	};
+
+	// AABBとの衝突点（貫通点）のtが小さいほう
+	float tMin_ = (std::max)((std::max)(tNear.x, tNear.y), tNear.z);
+	// AABBとの衝突点（貫通点）のtが大きいほう
+	float tMax_ = (std::min)((std::min)(tFar.x, tFar.y), tFar.z);
+
+	if (tMin_ <= tMax_) {
+
+		if (tMin_ < 1.0f && tMax_ > 0.0f) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
 // 三角形の描画
 void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
 	Triangle triangle_{
