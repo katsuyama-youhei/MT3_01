@@ -6,6 +6,7 @@
 #include "Draw3D.h"
 #include<cmath>
 #include <numbers>
+#include <algorithm>
 
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
@@ -253,6 +254,23 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
 		return true;
 	}
+	return false;
+};
+
+// AABBと球との衝突判定
+bool IsCollision(const AABB& aabb, const Sphere& sphere) {
+	//最近接点を求める
+	Vector3 closestPoint{ std::clamp(sphere.center.x, aabb.min.x, aabb.max.x),
+		std::clamp(sphere.center.y, aabb.min.y, aabb.max.y) ,
+		std::clamp(sphere.center.z, aabb.min.z, aabb.max.z) };
+
+	//最近接点と球の中心との距離を求める
+	float distance = Length(Subtract(closestPoint, sphere.center));
+	//距離が半径よりも小さければ衝突
+	if (distance <= sphere.radius) {
+		return true;
+	}
+
 	return false;
 };
 

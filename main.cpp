@@ -22,14 +22,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate = { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
 
-	AABB aabb1{
+	Vector3 point{ -1.5f, 0.6f, 0.6f };
+
+	Sphere sphere{ point, 1.0f };
+
+	AABB aabb{
 		.min{-0.5f,-0.5f,-0.5f},
 		.max{0.0f,0.0f,0.0f},
-	};
-
-	AABB aabb2{
-		.min{0.2f,0.2f,0.2f},
-		.max{1.0f,1.0f,1.0f},
 	};
 
 	// 球のカラー変更用
@@ -56,7 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldMViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (IsCollision(aabb1, aabb2)) {
+		if (IsCollision(aabb, sphere)) {
 			color = 0xFF0000FF;
 		}
 		else {
@@ -64,8 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		// minとmaxが入れ替わらないように
-		SwapLimit(aabb1);
-		SwapLimit(aabb2);
+		SwapLimit(aabb);
 
 		///
 		/// ↑更新処理ここまで
@@ -77,16 +75,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
 
-		DrawAABB(aabb1, worldMViewProjectionMatrix, viewportMatrix, color);
-		DrawAABB(aabb2, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
+		DrawSphere(sphere, worldMViewProjectionMatrix, viewportMatrix, 0xFFFFFFFF);
 
+		DrawAABB(aabb, worldMViewProjectionMatrix, viewportMatrix, color);
+	
 		ImGui::Begin("Window");
 
-		ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.01f);
+		ImGui::DragFloat3("aabb1.min", &aabb.min.x, 0.01f);
+		ImGui::DragFloat3("aabb1.max", &aabb.max.x, 0.01f);
 
-		ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.01f);
+		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("sphere1Radius", &sphere.radius, 0.01f);
 
 		ImGui::End();
 
