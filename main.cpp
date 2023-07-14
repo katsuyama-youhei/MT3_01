@@ -24,18 +24,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 point{ -1.5f, 0.6f, 0.6f };
 
-	Segment segment{
-		.origin{-0.7f,0.3f,0.0f},
-		.diff{2.0f,-0.5f,0.0f}
-	};
-
-	AABB aabb{
-		.min{-0.5f,-0.5f,-0.5f},
-		.max{0.5f,0.5f,0.5f},
+	Vector3 controlPoints[3] = {
+		{-0.8f,0.58f,1.0f},
+		{1.76f,1.0f,-0.3f},
+		{0.94f,-0.7f,2.3f},
 	};
 
 	// 球のカラー変更用
-	unsigned int color = 0xFFFFFFFF;
+	unsigned int  color = BLUE;
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -58,18 +54,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldMViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		if (IsCollision(aabb, segment)) {
-			color = 0xFF0000FF;
-		}
-		else {
-			color = 0xFFFFFFFF;
-		}
-
-		Vector3 start = Transform(Transform(segment.origin, worldMViewProjectionMatrix), viewportMatrix);
-		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), worldMViewProjectionMatrix), viewportMatrix);
-
-		// minとmaxが入れ替わらないように
-		SwapLimit(aabb);
+		Sphere p0 = { controlPoints[0],0.01f };
+		Sphere p1 = { controlPoints[1],0.01f };
+		Sphere p2 = { controlPoints[2],0.01f };
 
 		///
 		/// ↑更新処理ここまで
@@ -81,19 +68,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
 
+		DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], worldMViewProjectionMatrix, viewportMatrix, color);
 
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), 0xFFFFFFFF);
-		
-
-		DrawAABB(aabb, worldMViewProjectionMatrix, viewportMatrix, color);
+		DrawSphere(p0, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
+		DrawSphere(p1, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
+		DrawSphere(p2, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
 
 		ImGui::Begin("Window");
 
-		ImGui::DragFloat3("aabb1.min", &aabb.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1.max", &aabb.max.x, 0.01f);
-
-		ImGui::DragFloat3("segmentOrigin", &segment.origin.x, 0.01f);
-		ImGui::DragFloat3("segmentDiff", &segment.diff.x, 0.01f);
+		ImGui::DragFloat3("controlPoints[0]", &controlPoints[0].x, 0.01f);
+		ImGui::DragFloat3("controlPoints[1]", &controlPoints[1].x, 0.01f);
+		ImGui::DragFloat3("controlPoints[2]", &controlPoints[2].x, 0.01f);
 
 		ImGui::End();
 

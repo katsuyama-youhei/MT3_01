@@ -7,6 +7,7 @@
 #include<cmath>
 #include <numbers>
 #include <algorithm>
+#include<stdint.h>
 
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
@@ -77,7 +78,7 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 };
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
-	const uint32_t kSubdivision = 30; //分割数
+	const uint32_t kSubdivision = 15; //分割数
 	const float kLonEvery = 2.0f * float(std::numbers::pi) / float(kSubdivision);//経度分割1つ分の角度
 	const float kLatEvery = float(std::numbers::pi) / float(kSubdivision);//緯度分割1つ分の角度
 	//緯度の方向に分割 
@@ -297,7 +298,7 @@ bool IsCollision(const AABB& aabb, const Segment& line) {
 	Vector3 tFar = {
 	(std::max)(tMin.x, tMax.x) ,
 	(std::max)(tMin.y, tMax.y) ,
-	(std::max)(tMin.z, tMax.z) 
+	(std::max)(tMin.z, tMax.z)
 	};
 
 	// AABBとの衝突点（貫通点）のtが小さいほう
@@ -390,4 +391,35 @@ void SwapLimit(AABB& aabb) {
 
 	aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
 	aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+};
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	return { (1.0f - t) * v1.x + t * v2.x,(1.0f - t) * v1.y + t * v2.y,(1.0f - t) * v1.z + t * v2.z };
+};
+
+Vector3 Bezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, float t) {
+	Vector3 p0p1 = Lerp(controlPoint0, controlPoint1, t);
+	Vector3 p1p2 = Lerp(controlPoint1, controlPoint2, t);
+	Vector3 p = Lerp(p0p1, p1p2, t);
+	return p;
+};
+
+void DrawBezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color) {
+	// 分割数
+	constexpr int kNumDevide = 16;
+
+	for (int divideIndex = 0; divideIndex < kNumDevide; ++divideIndex) {
+		float t = float(divideIndex) / float(kNumDevide);
+		float nextT = float(divideIndex + 1) / float(kNumDevide);
+
+		// 2次ベジェ曲線上の点を求める
+		Vector3 p = Bezier(controlPoint0, controlPoint1, controlPoint2, t);
+		Vector3 pNext = Bezier(controlPoint0, controlPoint1, controlPoint2, nextT);
+
+		p = Transform(Transform(p, viewProjectionMatrix), viewportMatrix);
+		pNext = Transform(Transform(pNext, viewProjectionMatrix), viewportMatrix);
+
+		Novice::DrawLine(int(p.x), int(p.y), int(pNext.x), int(pNext.y), color);
+	}
+
 };

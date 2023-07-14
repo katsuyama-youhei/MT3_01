@@ -1,20 +1,25 @@
 #pragma once
+
+// 球
 struct Sphere
 {
 	Vector3 center; // 中心
 	float radius;   // 半径
 };
 
+// 平面
 struct Plane
 {
 	Vector3 normal; // 法線
 	float distance; // 距離
 };
 
+// 三角形
 struct Triangle {
 	Vector3 vertices[3]; // 頂点
 };
 
+// 平行な直方体
 struct AABB {
 	Vector3 min;
 	Vector3 max;
@@ -59,3 +64,12 @@ Vector3 Perpendicular(const Vector3& vector);
 
 // minとmaxが入れ替わらないように
 void SwapLimit(AABB& v);
+
+// 線形補完
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+// ベジェ曲線上の点を求める
+Vector3 Bezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2,float t);
+
+// ベジェ曲線の描画
+void DrawBezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, unsigned int color);
