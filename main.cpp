@@ -24,12 +24,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 point{ -1.5f, 0.6f, 0.6f };
 
-	Vector3 controlPoints[3] = {
-		{-0.8f,0.58f,1.0f},
-		{1.76f,1.0f,-0.3f},
-		{0.94f,-0.7f,2.3f},
-	};
-
 	// 球のカラー変更用
 	unsigned int  color = BLUE;
 
@@ -54,10 +48,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldMViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		Sphere p0 = { controlPoints[0],0.01f };
-		Sphere p1 = { controlPoints[1],0.01f };
-		Sphere p2 = { controlPoints[2],0.01f };
-
 		///
 		/// ↑更新処理ここまで
 		///
@@ -68,17 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(worldMViewProjectionMatrix, viewportMatrix);
 
-		DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], worldMViewProjectionMatrix, viewportMatrix, color);
-
-		DrawSphere(p0, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
-		DrawSphere(p1, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
-		DrawSphere(p2, worldMViewProjectionMatrix, viewportMatrix, 0x000000FF);
-
 		ImGui::Begin("Window");
-
-		ImGui::DragFloat3("controlPoints[0]", &controlPoints[0].x, 0.01f);
-		ImGui::DragFloat3("controlPoints[1]", &controlPoints[1].x, 0.01f);
-		ImGui::DragFloat3("controlPoints[2]", &controlPoints[2].x, 0.01f);
 
 		ImGui::End();
 

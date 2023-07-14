@@ -7,8 +7,6 @@
 #include<cmath>
 #include <numbers>
 #include <algorithm>
-#include<stdint.h>
-
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 	const float kGridHalfwidth = 2.0f; //Gridの半分
